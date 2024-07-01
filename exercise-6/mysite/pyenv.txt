@@ -1,0 +1,208 @@
+Creating python virtual environment in windows:
+
+C:\Users\SPHOORTHY>python --version
+Python 3.12.3
+
+C:\Users\SPHOORTHY>python3 -m pip install --upgrade pip
+
+
+C:\Users\SPHOORTHY\Documents>mkdir projectA
+
+C:\Users\SPHOORTHY\Documents>cd projectA
+
+C:\Users\SPHOORTHY\Documents\projectA>dir
+ 
+C:\Users\SPHOORTHY\Documents\projectA>py -m venv .venv
+
+C:\Users\SPHOORTHY\Documents\projectA>.venv\Scripts\activate
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>where python
+
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>.venv\Scripts\python
+
+>>> exit()
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>deactivate
+C:\Users\SPHOORTHY\Documents\projectA>
+
+for installing any package in virtual environment in python 
+>py -m pip install requests	#requests is a package name
+
+Installing packages from requirements.txt file
+>py -m pip install -r requirements.txt
+
+How to install django in python virtual environment?
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>python -m django --version
+C:\Users\SPHOORTHY\Documents\projectA\.venv\Scripts\python.exe: No module named django
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>py --version
+Python 3.12.2
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>py -m pip install django
+Collecting django
+  Downloading Django-5.0.6-py3-none-any.whl.metadata (4.1 kB)
+Collecting asgiref<4,>=3.7.0 (from django)
+  Downloading asgiref-3.8.1-py3-none-any.whl.metadata (9.3 kB)
+Collecting sqlparse>=0.3.1 (from django)
+  Downloading sqlparse-0.5.0-py3-none-any.whl.metadata (3.9 kB)
+Collecting tzdata (from django)
+  Downloading tzdata-2024.1-py2.py3-none-any.whl.metadata (1.4 kB)
+Downloading Django-5.0.6-py3-none-any.whl (8.2 MB)
+   ---------------------------------------- 8.2/8.2 MB 932.4 kB/s eta 0:00:00
+Downloading asgiref-3.8.1-py3-none-any.whl (23 kB)
+Downloading sqlparse-0.5.0-py3-none-any.whl (43 kB)
+   ---------------------------------------- 44.0/44.0 kB 535.4 kB/s eta 0:00:00
+Downloading tzdata-2024.1-py2.py3-none-any.whl (345 kB)
+   ---------------------------------------- 345.4/345.4 kB 522.8 kB/s eta 0:00:00
+Installing collected packages: tzdata, sqlparse, asgiref, django
+Successfully installed asgiref-3.8.1 django-5.0.6 sqlparse-0.5.0 tzdata-2024.1
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>
+
+# Creating a django project
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>django-admin --version
+5.0.6
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>python -m django --version
+5.0.6
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>django-admin startproject mysite
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>python manage.py runserver
+C:\Users\SPHOORTHY\AppData\Local\Programs\Python\Python312\python.exe: can't open file 'C:\\Users\\SPHOORTHY\\Documents\\projectA\\manage.py': [Errno 2] No such file or directory
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 291B-8770
+
+ Directory of C:\Users\SPHOORTHY\Documents\projectA
+
+06/01/2024  01:50 PM    <DIR>          .
+06/01/2024  01:50 PM    <DIR>          ..
+06/01/2024  12:35 PM    <DIR>          .venv
+06/01/2024  01:50 PM    <DIR>          mysite
+               0 File(s)              0 bytes
+               4 Dir(s)  60,455,739,392 bytes free
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>cd mysite
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\mysite>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 291B-8770
+
+ Directory of C:\Users\SPHOORTHY\Documents\projectA\mysite
+
+06/01/2024  01:50 PM    <DIR>          .
+06/01/2024  01:50 PM    <DIR>          ..
+06/01/2024  01:50 PM               684 manage.py
+06/01/2024  01:50 PM    <DIR>          mysite
+               1 File(s)            684 bytes
+               3 Dir(s)  60,455,739,392 bytes free
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\mysite>python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+June 01, 2024 - 13:56:59
+Django version 5.0.6, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+$ python manage.py runserver 8080    #if want to change port
+$ python manage.py runserver 0.0.0.0:8000  #if want to change IP
+
+#   Quit the server using Ctrl+C
+
+# For creating an app:
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\mysite>python manage.py startapp polls
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\mysite>python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+If you get an error page here, check that you’re going to http://localhost:8000/polls/ and not http://localhost:8000/.
+
+
+C:\Users\SPHOORTHY\Documents\projectA\mysite\mysite\settings.py changed, reloading.
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+You have 18 unapplied migration(s). Your project may not work properly until you apply the migrations for app(s): admin, auth, contenttypes, sessions.
+Run 'python manage.py migrate' to apply them.
+June 01, 2024 - 15:08:14
+Django version 5.0.6, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\mysite>python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, sessions
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying sessions.0001_initial... OK
+
+
+C:\Users\SPHOORTHY\Documents\projectA>cd Django-project
+
+C:\Users\SPHOORTHY\Documents\projectA\Django-project>cd..
+
+C:\Users\SPHOORTHY\Documents\projectA>.venv\Scripts\activate
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>cd Django-project
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 291B-8770
+
+ Directory of C:\Users\SPHOORTHY\Documents\projectA\Django-project
+
+06/01/2024  03:30 PM    <DIR>          .
+06/01/2024  03:30 PM    <DIR>          ..
+06/01/2024  03:30 PM    <DIR>          mysite
+               0 File(s)              0 bytes
+               3 Dir(s)  60,456,443,904 bytes free
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>python manage.py makemigrations polls
+C:\Users\SPHOORTHY\AppData\Local\Programs\Python\Python312\python.exe: can't open file 'C:\\Users\\SPHOORTHY\\Documents\\projectA\\Django-project\\manage.py': [Errno 2] No such file or directory
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>cd mysite
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py makemigrations polls
+Migrations for 'polls':
+  polls\migrations\0001_initial.py
+    - Create model Question
+    - Create model Choice
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>
+
+
+

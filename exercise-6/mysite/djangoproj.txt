@@ -1,0 +1,233 @@
+django important details:
+
+The path() function is passed four arguments, two required: route and view, and two optional: kwargs, and name. At this point, it’s worth reviewing what these arguments are for.
+
+path() argument: route¶
+route is a string that contains a URL pattern. When processing a request, Django starts at the first pattern in urlpatterns and makes its way down the list, comparing the requested URL against each pattern until it finds one that matches.
+
+Patterns don’t search GET and POST parameters, or the domain name. For example, in a request to https://www.example.com/myapp/, the URLconf will look for myapp/. In a request to https://www.example.com/myapp/?page=3, the URLconf will also look for myapp/.
+
+By default, INSTALLED_APPS contains the following apps, all of which come with Django:
+
+django.contrib.admin – The admin site. You’ll use it shortly.
+django.contrib.auth – An authentication system.
+django.contrib.contenttypes – A framework for content types.
+django.contrib.sessions – A session framework.
+django.contrib.messages – A messaging framework.
+django.contrib.staticfiles – A framework for managing static files.
+These applications are included by default as a convenience for the common case.
+
+Some of these applications make use of at least one database table, though, so we need to create the tables in the database before we can use them. To do that, run the following command:
+
+/ 
+$ python manage.py migrate
+The migrate command looks at the INSTALLED_APPS setting and creates any necessary database tables according to the database settings in your mysite/settings.py file and the database migrations shipped with the app (we’ll cover those later). You’ll see a message for each migration it applies. If you’re interested, run the command-line client for your database and type \dt (PostgreSQL), SHOW TABLES; (MariaDB, MySQL), .tables (SQLite), or SELECT TABLE_NAME FROM USER_TABLES; (Oracle) to display the tables Django created.
+
+
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>cd mysite
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py makemigrations polls
+Migrations for 'polls':
+  polls\migrations\0001_initial.py
+    - Create model Question
+    - Create model Choice
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py sqlmigrate polls 0001
+BEGIN;
+--
+-- Create model Question
+--
+CREATE TABLE "polls_question" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "question_text" varchar(200) NOT NULL, "pub_date" datetime NOT NULL);
+--
+-- Create model Choice
+--
+CREATE TABLE "polls_choice" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "choice_text" varchar(200) NOT NULL, "votes" integer NOT NULL, "question_id" bigint NOT NULL REFERENCES "polls_question" ("id") DEFERRABLE INITIALLY DEFERRED);
+CREATE INDEX "polls_choice_question_id_c5b4b260" ON "polls_choice" ("question_id");
+COMMIT;
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>
+
+
+Activating models¶
+That small bit of model code gives Django a lot of information. With it, Django is able to:
+
+Create a database schema (CREATE TABLE statements) for this app.
+Create a Python database-access API for accessing Question and Choice objects.
+
+For checking everything is OK with Django-project.
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py check
+System check identified no issues (0 silenced).
+
+
+Now, run migrate again to create those model tables in your database:
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, contenttypes, polls, sessions
+Running migrations:
+  Applying polls.0001_initial... OK
+
+Change your models (in models.py).
+Run python manage.py makemigrations to create migrations for those changes
+Run python manage.py migrate to apply those changes to the database.
+#The reason that there are separate commands to make and apply migrations is because you’ll commit 
+migrations to your version control system and ship them with your app; they not only make your development 
+easier, they’re also usable by other developers and in production.
+
+C:\Users\SPHOORTHY\Documents\projectA>.venv\Scripts\activate
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA>cd Django-project
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 291B-8770
+
+ Directory of C:\Users\SPHOORTHY\Documents\projectA\Django-project
+
+06/01/2024  03:30 PM    <DIR>          .
+06/01/2024  03:30 PM    <DIR>          ..
+06/03/2024  12:44 PM    <DIR>          mysite
+               0 File(s)              0 bytes
+               3 Dir(s)  59,826,683,904 bytes free
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project>cd mysite
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>dir
+ Volume in drive C has no label.
+ Volume Serial Number is 291B-8770
+
+ Directory of C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite
+
+06/03/2024  12:44 PM    <DIR>          .
+06/03/2024  12:44 PM    <DIR>          ..
+06/03/2024  12:44 PM           143,360 db.sqlite3
+06/01/2024  01:50 PM               684 manage.py
+06/01/2024  03:30 PM    <DIR>          mysite
+06/01/2024  03:30 PM    <DIR>          polls
+               2 File(s)        144,044 bytes
+               4 Dir(s)  59,826,610,176 bytes free
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py shell
+Python 3.12.2 (tags/v3.12.2:6abddd9, Feb  6 2024, 21:26:36) [MSC v.1937 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from polls.models import Question,Choice
+>>> Question.objects.all()
+<QuerySet [<Question: What's your name?>]>
+>>> Question.objects.filter(id=1)
+<QuerySet [<Question: What's your name?>]>
+>>> Question.objects.filter(question_text__startswith="Whats")
+<QuerySet []>
+>>> Question.objects.filter(question_text__startswith="What's")
+<QuerySet [<Question: What's your name?>]>
+>>> Question.objects.get(id=2)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\SPHOORTHY\Documents\projectA\.venv\Lib\site-packages\django\db\models\manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\SPHOORTHY\Documents\projectA\.venv\Lib\site-packages\django\db\models\query.py", line 649, in get
+    raise self.model.DoesNotExist(
+polls.models.Question.DoesNotExist: Question matching query does not exist.
+>>> q = Question.objects.get(id=1)
+>>> q.was_published_recently()
+True
+>>> q.choice_set.all()
+<QuerySet []>
+>>> q.choice_set.create(choice_text="Mangesh",votes=0)
+<Choice: Mangesh>
+>>> q.choice_set.create(choice_text="Ganesh",votes=3)
+<Choice: Ganesh>
+>>> c = q.choice_set.create(choice_text="Ranesh",votes=3)
+>>> c.question_text
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'Choice' object has no attribute 'question_text'. Did you mean: 'question_id'?
+>>> c.question
+<Question: What's your name?>
+>>> c.Question
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+AttributeError: 'Choice' object has no attribute 'Question'. Did you mean: 'question'?
+>>> c.question
+<Question: What's your name?>
+>>> q.choice_set.all()
+<QuerySet [<Choice: Mangesh>, <Choice: Ganesh>, <Choice: Ranesh>]>
+>>> q.choice_set.count()
+3
+
+
+Creating an admin user¶
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py createsuperuser
+Username (leave blank to use 'sphoorthy'): Nilesh-SPHN
+Email address: nilesh@sphoorthyengg.ac.in
+Password:
+Password (again):
+Error: Blank passwords aren't allowed.
+Password:
+Password (again):
+Superuser created successfully.
+
+Start the development server¶
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python manage.py runserver
+Watching for file changes with StatReloader
+Performing system checks...
+
+System check identified no issues (0 silenced).
+June 04, 2024 - 11:32:32
+Django version 5.0.6, using settings 'mysite.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.
+
+http://127.0.0.1:8000/admin/   #in browser
+#You should see a few types of editable content: groups and users. They are provided by 
+django.contrib.auth, the authentication framework shipped by Django.
+
+Make the poll app modifiable in the admin¶
+But where’s our poll app? It’s not displayed on the admin index page.
+
+Only one more thing to do: we need to tell the admin that Question objects have an admin interface. 
+To do this, open the polls/admin.py file, and edit it to look like this:
+
+polls/admin.py¶
+
+from django.contrib import admin
+
+from .models import Question
+
+admin.site.register(Question)
+
+
+Overview¶
+A view is a “type” of web page in your Django application that generally serves a specific function 
+and has a specific template. For example, 
+we’ll have the following four views:
+
+Question “index” page – displays the latest few questions.
+Question “detail” page – displays a question text, with no results but with a form to vote.
+Question “results” page – displays results for a particular question.
+Vote action – handles voting for a particular choice in a particular question.
+
+In Django, web pages and other content are delivered by views. Each view is represented by a Python function
+(or method, in the case of class-based views). Django will choose a view by examining the URL that’s requested
+(to be precise, the part of the URL after the domain name).
+A URL pattern is the general form of a URL - for example: /newsarchive/<year>/<month>/.
+
+To get from a URL to a view, Django uses what are known as ‘URLconfs’. 
+A URLconf maps URL patterns to views.
+
+Adding requirements.txt
+
+(.venv) C:\Users\SPHOORTHY\Documents\projectA\Django-project\mysite>python -m pip freeze > requirements.txt
+
+
+
+
+
+
+
+
+
+
+
